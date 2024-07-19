@@ -1,5 +1,6 @@
 "use client";
 
+import { signup } from "@/app/actions/user";
 import Image from "next/image";
 import { useState } from "react";
 export default function Signup() {
@@ -76,6 +77,9 @@ export default function Signup() {
           <button
             type="submit"
             className="flex w-full justify-center rounded-sm my-6 bg-nav-blue p-3 text-sm font-semibold text-white shadow-sm"
+            onClick={() => {
+              signup(email, password, name);
+            }}
           >
             Sign Up
           </button>
