@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BoardProps } from "@/interfaces/board-interface";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   return (
@@ -41,7 +42,10 @@ function AddButton({ category }: { category: string }) {
 
   return (
     <>
-      <button onClick={toggleModal} className="text-gray px-2 py-1 rounded-md">
+      <button
+        onClick={toggleModal}
+        className="text-gray-500 px-2 py-1 rounded-md"
+      >
         + Add Card
       </button>
       {isModalOpen && <Modal toggleModal={toggleModal} category={category} />}
@@ -55,47 +59,78 @@ interface ModalProps {
 }
 
 function Modal({ toggleModal, category }: ModalProps) {
+  const [option, setOption] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  const navigate = useRouter();
+
   return (
     <div
-      className="fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full h-full bg-gray-800 bg-opacity-75"
+      className="fixed inset-0 z-50 flex justify-center items-center w-full h-full bg-gray-800 bg-opacity-75"
       onClick={toggleModal}
     >
       <div
-        className="relative p-4 w-full max-w-md max-h-full rounded-lg shadow dark:bg-gray-700"
+        className="relative p-4 w-full max-w-md rounded-lg shadow bg-white dark:bg-gray-700"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex  justify-center p-4 border-b rounded-t dark:border-gray-600">
+        <div className="flex justify-center p-4 border-b rounded-t dark:border-gray-600">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             Add New Task in {category}
           </h3>
         </div>
 
         <div className="grid gap-4 mb-4 p-4">
-          <div className="col-span-2">
-            <label className="block text-left mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          <div>
+            <label
+              htmlFor="category"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Category
+            </label>
+            <select
+              id="category"
+              value={option}
+              onChange={(e) => setOption(e.target.value)}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            >
+              <option value="" disabled>
+                Select category
+              </option>
+              <option value="TODO">ToDo</option>
+              <option value="IN_PROGRESS">In Progress</option>
+              <option value="REVIEW">Review</option>
+              <option value="DONE">Done</option>
+            </select>
+          </div>
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Title
             </label>
             <input
               type="text"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white  "
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
               required
               placeholder="Title"
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
-          <div className="col-span-2">
-            <label className="block mb-2 text-left text-sm font-medium text-gray-900 dark:text-white">
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Content
             </label>
             <textarea
-              rows={10}
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300   dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white  "
+              rows={4}
+              className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
               placeholder="Task content"
+              onChange={(e) => setContent(e.target.value)}
             ></textarea>
           </div>
         </div>
+
         <button
           type="submit"
-          className="text-white inline-flex items-center bg-nav-blue  focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 "
+          className="text-white bg-nav-blue rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600"
         >
           + Add Task
         </button>
