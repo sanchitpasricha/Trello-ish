@@ -3,17 +3,26 @@
 import { signup } from "@/app/actions/user";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const router = useRouter();
+
   async function signupHandler() {
     const token = await signup(email, password, name);
+    if (!token) {
+      alert("Failed to signup");
+      return;
+    }
     localStorage.setItem("token", token.token);
     setName("");
     setEmail("");
     setPassword("");
+    alert("User Signup Success");
+    router.push("/boards");
   }
 
   return (
@@ -95,7 +104,7 @@ export default function Signup() {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Already have an account?{" "}
-          <a href="#" className="font-semibold leading-6 text-nav-blue">
+          <a href="/login" className="font-semibold leading-6 text-nav-blue">
             Log In
           </a>
         </p>
