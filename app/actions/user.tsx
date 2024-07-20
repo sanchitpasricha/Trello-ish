@@ -26,3 +26,30 @@ export async function signup(
     throw new Error("User creation failed");
   }
 }
+
+export async function login(
+  email: string,
+  password: string
+): Promise<SignupResponse | null> {
+  try {
+    const user = await client.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return null;
+    }
+
+    const token = jwt.sign({ userId: user.id }, process.env.SECRET!);
+    return { token };
+  } catch (err) {
+    console.error(err);
+    throw new Error("User login failed");
+  }
+}
