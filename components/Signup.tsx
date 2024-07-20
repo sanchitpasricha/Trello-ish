@@ -8,6 +8,14 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  async function signupHandler() {
+    const token = await signup(email, password, name);
+    localStorage.setItem("token", token.token);
+    setName("");
+    setEmail("");
+    setPassword("");
+  }
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -77,9 +85,7 @@ export default function Signup() {
           <button
             type="submit"
             className="flex w-full justify-center rounded-sm my-6 bg-nav-blue p-3 text-sm font-semibold text-white shadow-sm"
-            onClick={() => {
-              signup(email, password, name);
-            }}
+            onClick={signupHandler}
           >
             Sign Up
           </button>
